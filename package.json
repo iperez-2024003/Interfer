@@ -1,0 +1,44 @@
+{
+  "name": "postman",
+  "version": "1.0.0",
+  "description": "API REST para gestión de empresas en la feria Interfer",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "keywords": [
+    "auth",
+    "authentication",
+    "nodejs",
+    "postgresql",
+    "jwt",
+    "api"
+  ],
+  "author": "Equipo Gestor de Opiniones",
+  "license": "MIT",
+  "dependencies": {
+    "argon2": "^0.44.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "exceljs": "^4.4.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "express-validator": "^7.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^9.2.1",
+    "morgan": "^1.10.1",
+    "nodemon": "^3.1.10"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "nodemon": "^3.1.10"
+  }
+}
