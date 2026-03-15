@@ -1,0 +1,206 @@
+{
+	"info": {
+		"_postman_id": "b3e34b9d-1fb6-4074-b580-f0ed27c2e01b",
+		"name": "Interfer API (Proyecto Postman)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if(jsonData.token) {",
+									"    pm.environment.set(\"token\", jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@interfer.com\",\r\n    \"password\": \"Admin123!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Empresas",
+			"item": [
+				{
+					"name": "Registrar Empresa",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Tech Corp Guatemala\",\r\n    \"impactLevel\": \"Alto\",\r\n    \"yearsTrajectory\": 10,\r\n    \"category\": \"Tecnología\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/company",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ver Listado y Filtrar (GET)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/company?sortBy=A-Z",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"company"
+							],
+							"query": [
+								{
+									"key": "sortBy",
+									"value": "A-Z",
+									"description": "Ordena de la A a la Z"
+								},
+								{
+									"key": "category",
+									"value": "Tecnología",
+									"description": "Filtra por categoría",
+									"disabled": true
+								},
+								{
+									"key": "yearsTrajectory",
+									"value": "10",
+									"description": "Filtro años",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Información",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"impactLevel\": \"Medio\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/company/REEMPLAZAR_ID",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"company",
+								"REEMPLAZAR_ID"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reportes",
+			"item": [
+				{
+					"name": "Generar Excel",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/reports/excel",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"reports",
+								"excel"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3005/api/v1"
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
