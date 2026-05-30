@@ -4,10 +4,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { config } from '../configs/config.js';
 import fs from 'fs';
 
+const uploadPath = config.upload.uploadPath || path.resolve(process.cwd(), 'uploads');
+
 // Crear el directorio de uploads si no existe
 const createUploadDir = () => {
-  if (!fs.existsSync(config.upload.uploadPath)) {
-    fs.mkdirSync(config.upload.uploadPath, { recursive: true });
+  if (!fs.existsSync(uploadPath)) {
+    fs.mkdirSync(uploadPath, { recursive: true });
   }
 };
 
@@ -15,7 +17,7 @@ const createUploadDir = () => {
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     createUploadDir();
-    cb(null, config.upload.uploadPath);
+    cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
     const uniqueName = `${uuidv4()}${path.extname(file.originalname)}`;
@@ -30,7 +32,7 @@ const fileFilter = (req, file, cb) => {
   } else {
     cb(
       new Error(
-        'Tipo de archivo no permitido. Solo se permiten imágenes (JPEG, JPG, PNG, GIF)'
+        'Tipo de archivo no permitido. Solo se permiten imágenes (JPEG, JPG, PNG, WEBP)'
       ),
       false
     );
@@ -67,11 +69,11 @@ export const handleUploadError = (error, req, res, next) => {
     }
   }
 
-  if (error.message.includes('Tipo de archivo no permitido')) {
+  if (error?.message?.includes('Tipo de archivo no permitido')) {
     return res.status(400).json({
       success: false,
       message: 'Tipo de archivo no permitido',
-      error: 'Solo se permiten imágenes (JPEG, JPG, PNG, GIF)',
+      error: 'Solo se permiten imágenes (JPEG, JPG, PNG, WEBP)',
     });
   }
 
@@ -80,7 +82,7 @@ export const handleUploadError = (error, req, res, next) => {
 
 export const deleteFile = (filename) => {
   try {
-    const filePath = path.join(config.upload.uploadPath, filename);
+    const filePath = path.join(uploadPath, filename);
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
       return true;

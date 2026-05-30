@@ -50,7 +50,7 @@ export const getCompanies = async (req = request, res = response) => {
       sortOptions.yearsTrajectory = -1; // Descending by default for years
     }
 
-    const companies = await Company.find(query).sort(sortOptions);
+    const companies = await Company.find(query).sort(sortOptions).lean();
 
     res.status(200).json({
       success: true,
@@ -71,7 +71,10 @@ export const updateCompany = async (req = request, res = response) => {
     const { _id, status, ...data } = req.body;
 
     // Actualizar la empresa
-    const company = await Company.findByIdAndUpdate(id, data, { new: true });
+    const company = await Company.findByIdAndUpdate(id, data, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!company) {
       return res.status(404).json({

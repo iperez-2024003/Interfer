@@ -16,6 +16,17 @@ export const generateExcelReport = async (req = request, res = response) => {
       { header: 'Categoría', key: 'category', width: 30 },
     ];
 
+    const headerRow = worksheet.getRow(1);
+    headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+    headerRow.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FF1F4E78' },
+    };
+    headerRow.alignment = { vertical: 'middle', horizontal: 'center' };
+    worksheet.views = [{ state: 'frozen', ySplit: 1 }];
+    worksheet.autoFilter = { from: 'A1', to: 'D1' };
+
     companies.forEach((company) => {
       worksheet.addRow({
         name: company.name,

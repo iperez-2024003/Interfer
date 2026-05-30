@@ -1,87 +1,89 @@
 # Interfer API
 
-API REST construida con **Node.js, Express y MongoDB** para la gestión de empresas participantes en la feria Interfer. Incluye un sistema de autenticación, gestión de empresas y generación de reportes en Excel.
+API REST para autenticación y gestión de empresas participantes en Interfer. Centraliza el alta, consulta y actualización de registros, protege los endpoints con JWT y permite exportar reportes en Excel.
 
-## 🚀 Requisitos Previos
+## Objetivo
 
-Antes de comenzar, asegúrate de tener instalado:
-- **Node.js** (v18 o superior recomendado)
-- **pnpm** (Gestor de paquetes, puedes instalarlo con `npm install -g pnpm`)
-- **MongoDB** (En ejecución localmente o una URI válida de MongoDB Atlas)
+Resolver la administración operativa de empresas de forma segura, trazable y simple de consumir desde Postman o cualquier cliente HTTP.
 
----
+## Características principales
 
-## 🛠️ Instalación y Configuración
+- Autenticación basada en JWT.
+- CRUD de empresas con filtros y ordenamiento.
+- Exportación de reportes `.xlsx`.
+- Validación de entrada y manejo centralizado de errores.
+- Rate limiting y cabeceras de seguridad con `helmet` y `cors`.
+- Colección de Postman incluida para pruebas rápidas.
 
-1. **Clona el repositorio** o asegúrate de estar en el directorio raíz del proyecto (`c:\Interfer`).
-2. **Instala las dependencias** ejecutando:
+## Tecnologías utilizadas
+
+- Node.js
+- Express
+- MongoDB + Mongoose
+- JSON Web Tokens
+- ExcelJS
+- Helmet
+- CORS
+- Morgan
+- Express Validator
+
+## Instalación y ejecución
+
+1. Instala dependencias:
    ```bash
-   pnpm install
+   npm install
    ```
-3. **Configura las variables de entorno:**
-   - Si no tienes un archivo `.env`, crea uno en la raíz basándote en un `.env.example` (si existe) o usando esta configuración básica (asegurándote de no exponer credenciales reales):
-     ```env
-     NODE_ENV=development
-     PORT=3005
-     URI_MONGO=mongodb://localhost:27017/Interfer
-     JWT_SECRET=MyVerySecretKeyForJWTTokenAuthenticationWith256Bits!
-     ```
-   *(Asegúrate de que tu MongoDB local esté corriendo).*
 
----
+2. Crea un archivo `.env` en la raíz:
+   ```env
+   NODE_ENV=development
+   PORT=3005
+   URI_MONGO=mongodb://127.0.0.1:27017/Interfer
+   JWT_SECRET=your-super-secret-key
+   ```
 
-## 🏃‍♂️ Ejecutar el Servidor
+3. Ejecuta el proyecto:
+   ```bash
+   npm run dev
+   ```
 
-Para levantar el servidor en modo desarrollo (con auto-recarga gracias a `nodemon`), ejecuta:
+4. Para producción:
+   ```bash
+   npm start
+   ```
 
-```bash
-pnpm run dev
+## Estructura general del proyecto
+
+```text
+.
+├── configs/              # Configuración de app, base de datos y seguridad
+├── helpers/              # Utilidades reutilizables de negocio e infraestructura
+├── middlewares/          # Validaciones, seguridad y manejo de errores
+├── src/
+│   ├── auth/             # Login y modelos de autenticación
+│   ├── company/          # Rutas, controladores y modelo de empresas
+│   └── reports/          # Generación de reportes Excel
+├── utils/                # Funciones auxiliares de cifrado y sesión
+└── Interfer_API_Postman_Collection.json
 ```
 
-Deberías ver un mensaje indicando:
-> `✅ MongoDB connected successfully`
-> `Interfer API Server running on port 3005`
+## Buenas prácticas implementadas
 
----
+- Separación por capas y responsabilidades.
+- Validación explícita de datos de entrada.
+- Protección de rutas con middleware de autenticación.
+- Respuestas consistentes para errores comunes.
+- Configuración externalizada mediante variables de entorno.
+- Generación de archivos con una ruta controlada y nombres únicos.
 
-## ⚡ Uso y Pruebas con Postman
+## Futuras mejoras
 
-El proyecto viene con una **Colección de Postman** lista para usar y probar todos los endpoints sin tener que configurarlos manualmente. 
+- Añadir pruebas automatizadas de integración y contrato.
+- Documentar la API con OpenAPI/Swagger.
+- Incorporar paginación y búsqueda avanzada en listados.
+- Agregar auditoría de cambios y logs estructurados.
+- Consolidar módulos heredados o no utilizados para reducir deuda técnica.
 
-### 1. Importar la Colección a Postman
-- Abre **Postman**.
-- Ve a **File -> Import** (o presiona `Ctrl + O`).
-- Selecciona el archivo llamado `Interfer_API_Postman_Collection.json` que se encuentra en la raíz del proyecto.
-- Haz clic en **Import**.
+## Conclusión
 
-### 2. Flujo de Trabajo en Postman
-Una vez importada la colección (**"Interfer API (Proyecto Postman)"**), sigue este orden:
-
-1. **Auth -> Login Admin**
-   - Ejecuta esta petición (`POST /auth/login`).
-   - El cuerpo de la petición ya tiene las credenciales del administrador por defecto (`admin@interfer.com` / `Admin123!`).
-   - *Magia de Postman:* Al ejecutar el login exitoso, Postman capturará el Token (JWT) automáticamente y lo guardará en una variable llamada `token`. ¡No tienes que copiar y pegar nada!
-
-2. **Endpoints de Empresas**
-   - Ahora puedes ir a la carpeta **Empresas** y ejecutar las peticiones como **Registrar Empresa**, **Ver Listado...** o **Actualizar**.
-   - Todas estas peticiones ya usarán automáticamente el token generado en el paso 1.
-
-3. **Reportes**
-   - Ve a la carpeta **Reportes** y ejecutar **Generar Excel**.
-   - Esto probará el endpoint que genera y descarga un archivo `.xlsx` con un reporte de las empresas.
-   - Importante darle en Send and Download para que se descargue el archivo. 
-   - Abrirlo en Excel para verificar los datos exactos
----
-
-## 📚 Estructura de Endpoints Principales
-
-Todos los endpoints usan el prefijo base `/api/v1`
-
-- **Autenticación:**
-  - `POST /auth/login` - Iniciar sesión como administrador.
-- **Empresas (Req. Token):**
-  - `POST /company` - Registrar nueva empresa.
-  - `GET /company` - Ver listado (Soporta query params de filtrado y ordenamiento).
-  - `PUT /company/:id` - Actualizar información de la empresa.
-- **Reportes (Req. Token):**
-  - `GET /reports/excel` - Generar reporte en formato Excel.
+Interfer API es una base sólida para una solución real de administración de empresas, con foco en seguridad, claridad y facilidad de mantenimiento.

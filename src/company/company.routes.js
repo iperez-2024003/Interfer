@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { check } from 'express-validator';
+import { check, param } from 'express-validator';
 import { registerCompany, getCompanies, updateCompany } from './company.controller.js';
 import { validarCampos } from '../../middlewares/validate-fields.js';
 import { validateJWT } from '../../middlewares/validate-JWT.js';
@@ -26,7 +26,7 @@ router.get('/', getCompanies);
 router.put(
   '/:id',
   [
-    check('id', 'No es un ID válido de MongoDB').isMongoId(),
+    param('id', 'No es un ID válido de MongoDB').isMongoId(),
     validarCampos,
   ],
   updateCompany
