@@ -31,7 +31,7 @@ Resolver la administración operativa de empresas de forma segura, trazable y si
 
 1. Instala dependencias:
    ```bash
-   npm install
+   pnpm install
    ```
 
 2. Crea un archivo `.env` en la raíz:
@@ -44,12 +44,12 @@ Resolver la administración operativa de empresas de forma segura, trazable y si
 
 3. Ejecuta el proyecto:
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 
 4. Para producción:
    ```bash
-   npm start
+   pnpm start
    ```
 
 ## Estructura general del proyecto
